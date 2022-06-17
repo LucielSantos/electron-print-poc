@@ -24,5 +24,8 @@ module.exports = {
         },
       ]
     })
-  ]
+  ],
+  externals: {
+    ['@thiagoelg/node-printer']: 'commonjs @thiagoelg/node-printer'
+  }
 };

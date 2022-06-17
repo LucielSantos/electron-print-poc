@@ -19,15 +19,10 @@ export const App = () => {
 
     console.log(printerObj);
 
-    const newImage = image || {
-      path: "C:\\Users\\Luciel\\Documents\\fotos\\c208776c-6cd4-4ae4-98a3-b59bbbea9ce0.jpg",
-    };
-
-    if (!newImage || !dimensions.width || !dimensions.height || !printer)
-      return;
+    if (!image || !dimensions.width || !dimensions.height || !printer) return;
 
     await window.electron.ipcRenderer.invoke("print-photo", {
-      photoPath: newImage.path,
+      photoPath: image.path,
       width: parseFloat(dimensions.width),
       height: parseFloat(dimensions.height),
       resize,

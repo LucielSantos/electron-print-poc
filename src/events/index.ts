@@ -1,5 +1,5 @@
 import { ipcMain, Notification } from "electron";
-import { mainWindow } from "..";
+import { mainWindow } from "../";
 import { PrintPhotoParams } from "../types/events";
 import { pathToBase64 } from "../utils/image";
 import { printPhoto } from "../utils/printPhoto";
@@ -35,5 +35,5 @@ ipcMain.handle(
 );
 
 ipcMain.handle("get-printers", async () => {
-  return mainWindow.webContents.getPrinters();
+  return mainWindow.webContents.getPrintersAsync();
 });

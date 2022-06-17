@@ -10,18 +10,22 @@
   </head>
 
   <style>
+    body {
+      box-shadow: inset 0px 0px 0px 3px #000000;
+    }
+
     @media print {
       @page {
-        size: 10px 10px;
+        size: <%= img.widthCm %>cm <%= img.heightCm %>cm;
         margin: 0;
       }
     }
   </style>
 
   <body>
-    <div class="w-screen h-screen bg-center bg-no-repeat">
+    <div class="w-screen h-screen overflow-hidden">
       <img
-        class="w-[<%= img.width %>] h-[<%= img.height %>] <%= resize === 'contain' ? 'object-contain' : 'object-cover' %>"
+        class="w-[<%= img.widthCm %>cm] h-[<%= img.heightCm %>cm] <%= resize === 'contain' ? 'object-contain' : 'object-cover' %>"
         src="<%= img.src %>"
       />
     </div>

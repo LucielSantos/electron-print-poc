@@ -33,6 +33,8 @@ export const printPhoto = (data: Data, { width, height, printer }: Configs) => {
         img: {
           width: cmToPx(width),
           height: cmToPx(height),
+          widthCm: width,
+          heightCm: height,
           src: data.imgSrc,
         },
       },
@@ -52,44 +54,45 @@ export const printPhoto = (data: Data, { width, height, printer }: Configs) => {
           const photoWindow = new BrowserWindow({
             width: Math.round(cmToPx(width)),
             height: Math.round(cmToPx(height)),
+            frame: false,
+            show: false,
           });
 
           photoWindow.loadFile(htmlPath);
 
-          // setTimeout(async () => {
-          photoWindow.webContents.print({
-            silent: false,
-            deviceName: printer,
-            margins: {
-              bottom: 0,
-              left: 0,
-              right: 0,
-              top: 0,
-              marginType: "none",
-            },
-            pageSize: {
-              width: cmToMicron(width),
-              height: cmToMicron(height),
-            },
-            // pageSize: {
-            //   width: cmToMicron(width),
-            //   height: cmToMicron(height),
-            // },
-          });
-          // }, 1000);
+          setTimeout(async () => {
+            photoWindow.webContents.print({
+              silent: true,
+              deviceName: printer,
+              margins: {
+                bottom: 0,
+                left: 0,
+                right: 0,
+                top: 0,
+                marginType: "none",
+              },
+              // pageSize: "(5x5)",
+              pageSize: {
+                width: cmToMicron(width),
+                height: cmToMicron(height),
+              },
+            });
+
+            console.log("Printed Photo");
+          }, 1000);
           // setTimeout(async () => {
           //   console.log(cmToMicron(width));
 
           //   const pdfBuffer = await photoWindow.webContents.printToPDF({
-          //     pageSize: {
-          //       width: cmToMicron(width) + 1,
-          //       height: cmToMicron(height) + 1,
-          //     },
-          //     marginsType: 1,
           //     // pageSize: {
-          //     //   width: cmToMicron(width),
-          //     //   height: cmToMicron(height),
+          //     //   width: cmToMicron(width) + 1,
+          //     //   height: cmToMicron(height) + 1,
           //     // },
+          //     marginsType: 1,
+          //     pageSize: {
+          //       width: cmToMicron(width),
+          //       height: cmToMicron(height),
+          //     },
           //   });
 
           //   if (!fs.existsSync(pdfFolderPath)) {
@@ -98,10 +101,14 @@ export const printPhoto = (data: Data, { width, height, printer }: Configs) => {
 
           //   fs.writeFileSync(pdfPath, pdfBuffer);
 
-          //   await print(pdfPath, { printer });
+          //   // await print(pdfPath, { printer });
           // }, 1000);
 
-          resolve(true);
+          setTimeout(() => {
+            photoWindow.close();
+
+            resolve(true);
+          }, 2000);
         } catch (error) {
           reject(error);
         }
