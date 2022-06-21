@@ -3,6 +3,7 @@ import { BrowserWindow } from "electron";
 import fs from "fs";
 import os from "os";
 import path from "path";
+import { dimensions } from "../constants/dimensions";
 import { cmToMicron, cmToPx } from "./help";
 
 const appPath = path.join(os.homedir(), "vyoo-print-photo");
@@ -14,9 +15,8 @@ const pdfFolderPath = path.join(appPath, "pdf");
 const pdfPath = path.join(pdfFolderPath, "index.pdf");
 
 interface Configs {
-  width: number;
-  height: number;
   printer: string;
+  dimensions: string;
 }
 
 interface Data {
@@ -24,17 +24,22 @@ interface Data {
   resize: "contain" | "cover";
 }
 
-export const printPhoto = (data: Data, { width, height, printer }: Configs) => {
+export const printPhoto = (
+  data: Data,
+  { printer, dimensions: dimensionsParam }: Configs
+) => {
+  const dimension = dimensions.find((value) => value.value === dimensionsParam);
+
   return new Promise((resolve, reject) => {
     ejs.renderFile(
       path.resolve(__dirname, "templates", "printPhoto", "index.ejs"),
       {
         resize: data.resize,
         img: {
-          width: cmToPx(width),
-          height: cmToPx(height),
-          widthCm: width,
-          heightCm: height,
+          width: cmToPx(dimension.width),
+          height: cmToPx(dimension.height),
+          widthCm: dimension.width,
+          heightCm: dimension.height,
           src: data.imgSrc,
         },
       },
@@ -52,10 +57,10 @@ export const printPhoto = (data: Data, { width, height, printer }: Configs) => {
           fs.writeFileSync(htmlPath, htmlContent);
 
           const photoWindow = new BrowserWindow({
-            width: Math.round(cmToPx(width)),
-            height: Math.round(cmToPx(height)),
+            width: Math.round(cmToPx(dimension.width)),
+            height: Math.round(cmToPx(dimension.height)),
             frame: false,
-            show: false,
+            show: true,
           });
 
           photoWindow.loadFile(htmlPath);
@@ -71,10 +76,9 @@ export const printPhoto = (data: Data, { width, height, printer }: Configs) => {
                 top: 0,
                 marginType: "none",
               },
-              // pageSize: "(5x5)",
               pageSize: {
-                width: cmToMicron(width),
-                height: cmToMicron(height),
+                width: cmToMicron(dimension.width),
+                height: cmToMicron(dimension.height),
               },
             });
 

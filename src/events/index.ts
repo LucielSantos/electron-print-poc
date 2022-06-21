@@ -6,10 +6,7 @@ import { printPhoto } from "../utils/printPhoto";
 
 ipcMain.handle(
   "print-photo",
-  async (
-    _,
-    { photoPath, height, width, resize, printer }: PrintPhotoParams
-  ) => {
+  async (_, { photoPath, dimensions, resize, printer }: PrintPhotoParams) => {
     console.log("Print on main process");
 
     const photoBase64 = await pathToBase64(photoPath);
@@ -17,7 +14,7 @@ ipcMain.handle(
     try {
       await printPhoto(
         { imgSrc: photoBase64, resize },
-        { height, width, printer }
+        { dimensions, printer }
       );
 
       return true;

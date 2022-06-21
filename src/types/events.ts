@@ -1,7 +1,6 @@
 export interface PrintPhotoParams {
   photoPath: string;
-  height: number;
-  width: number;
+  dimensions: string;
   printer: string;
   resize: "contain" | "cover";
 }

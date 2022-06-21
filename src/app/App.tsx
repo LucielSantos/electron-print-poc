@@ -1,16 +1,14 @@
 import { PrinterInfo } from "electron";
 import React, { useEffect } from "react";
-import { ImageInput, Input, Select } from "./components";
+import { dimensions } from "../constants/dimensions";
+import { ImageInput, Select } from "./components";
 
 export const App = () => {
   const [image, setImage] = React.useState<File | null>(null);
-  const [dimensions, setDimensions] = React.useState<{
-    width: string;
-    height: string;
-  }>({ height: "", width: "" });
   const [resize, setResize] = React.useState<"cover" | "contain">("contain");
   const [printers, setPrinters] = React.useState<PrinterInfo[]>([]);
   const [printer, setPrinter] = React.useState<string>();
+  const [dimension, setDimension] = React.useState<string>(dimensions[0].value);
 
   const handlePrint = async () => {
     console.log("handlePrint");
@@ -18,13 +16,13 @@ export const App = () => {
     const printerObj = printers.find((print) => print.name === printer);
 
     console.log(printerObj);
+    console.log(image);
 
-    if (!image || !dimensions.width || !dimensions.height || !printer) return;
+    if (!image || !printer) return;
 
     await window.electron.ipcRenderer.invoke("print-photo", {
       photoPath: image.path,
-      width: parseFloat(dimensions.width),
-      height: parseFloat(dimensions.height),
+      dimensions: dimension,
       resize,
       printer,
     });
@@ -32,13 +30,13 @@ export const App = () => {
 
   const handleChangeImage = (value: File | null) => setImage(value);
 
-  const handleChangeDimensions =
-    (dimension: keyof typeof dimensions) => (value: string) => {
-      setDimensions((prev) => ({
-        ...prev,
-        [dimension]: value,
-      }));
-    };
+  // const handleChangeDimensions =
+  //   (dimension: keyof typeof dimensions2) => (value: string) => {
+  //     setDimensions2((prev) => ({
+  //       ...prev,
+  //       [dimension]: value,
+  //     }));
+  //   };
 
   const handleChangeResize = (e: React.ChangeEvent<HTMLInputElement>) => {
     setResize(e.target.value as "cover" | "contain");
@@ -46,6 +44,10 @@ export const App = () => {
 
   const handleChangePrinter = (value: string) => {
     setPrinter(value);
+  };
+
+  const handleChangeDimension = (value: string) => {
+    setDimension(value);
   };
 
   useEffect(() => {
@@ -83,19 +85,32 @@ export const App = () => {
       </Select>
 
       <div className="flex gap-4">
-        <Input
+        <Select
+          name="dimension"
+          label="Dimensão (centímetros)"
+          value={dimension}
+          onChange={handleChangeDimension}
+        >
+          {dimensions.map((value) => (
+            <option key={value.value} value={value.value}>
+              {value.label}
+            </option>
+          ))}
+        </Select>
+
+        {/* <Input
           label="Altura"
           type="number"
-          value={dimensions.height}
+          value={dimensions2.height}
           onChange={handleChangeDimensions("height")}
         />
 
         <Input
           label="Largura"
           type="number"
-          value={dimensions.width}
+          value={dimensions2.width}
           onChange={handleChangeDimensions("width")}
-        />
+        /> */}
       </div>
 
       <div className="flex flex-col gap-2">
