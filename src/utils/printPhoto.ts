@@ -23,6 +23,7 @@ const pdfPath = path.join(pdfFolderPath, "index.pdf");
 interface Configs {
   printer: string;
   dimensions: string;
+  savePDF: boolean;
 }
 
 interface Data {
@@ -33,7 +34,7 @@ interface Data {
 
 export const printPhoto = async (
   data: Data,
-  { printer, dimensions: dimensionsParam }: Configs
+  { printer, dimensions: dimensionsParam, savePDF }: Configs
 ) => {
   let img = data.imgSrc;
   const dimension = dimensions.find((value) => value.value === dimensionsParam);
@@ -100,46 +101,49 @@ export const printPhoto = async (
 
           photoWindow.loadFile(htmlPath);
 
-          // setTimeout(async () => {
-          //   photoWindow.webContents.print({
-          //     silent: true,
-          //     deviceName: printer,
-          //     margins: {
-          //       bottom: 0,
-          //       left: 0,
-          //       right: 0,
-          //       top: 0,
-          //       marginType: "none",
-          //     },
-          //     pageSize: {
-          //       width: cmToMicron(dimension.width),
-          //       height: cmToMicron(dimension.height),
-          //     },
-          //   });
+          if (savePDF) {
+            setTimeout(async () => {
+              const pdfBuffer = await photoWindow.webContents.printToPDF({
+                // pageSize: {
+                //   width: cmToMicron(width) + 1,
+                //   height: cmToMicron(height) + 1,
+                // },
+                marginsType: 1,
+                pageSize: {
+                  width: dimension.width.micron,
+                  height: dimension.height.micron,
+                },
+              });
 
-          //   console.log("Printed Photo");
-          // }, 1000);
-          setTimeout(async () => {
-            const pdfBuffer = await photoWindow.webContents.printToPDF({
-              // pageSize: {
-              //   width: cmToMicron(width) + 1,
-              //   height: cmToMicron(height) + 1,
-              // },
-              marginsType: 1,
-              pageSize: {
-                width: dimension.width.micron,
-                height: dimension.height.micron,
-              },
-            });
+              if (!fs.existsSync(pdfFolderPath)) {
+                fs.mkdirSync(pdfFolderPath, { recursive: true });
+              }
 
-            if (!fs.existsSync(pdfFolderPath)) {
-              fs.mkdirSync(pdfFolderPath, { recursive: true });
-            }
+              fs.writeFileSync(pdfPath, pdfBuffer);
 
-            fs.writeFileSync(pdfPath, pdfBuffer);
+              // await print(pdfPath, { printer });
+            }, 1000);
+          } else {
+            setTimeout(async () => {
+              photoWindow.webContents.print({
+                silent: true,
+                deviceName: printer,
+                margins: {
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  top: 0,
+                  marginType: "none",
+                },
+                pageSize: {
+                  width: dimension.width.micron,
+                  height: dimension.height.micron,
+                },
+              });
 
-            // await print(pdfPath, { printer });
-          }, 1000);
+              console.log("Printed Photo");
+            }, 1000);
+          }
 
           setTimeout(() => {
             photoWindow.close();

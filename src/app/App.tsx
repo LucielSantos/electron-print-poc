@@ -9,6 +9,7 @@ export const App = () => {
   const [printers, setPrinters] = React.useState<PrinterInfo[]>([]);
   const [printer, setPrinter] = React.useState<string>();
   const [dimension, setDimension] = React.useState<string>(dimensions[0].value);
+  const [savePDF, setSavePDF] = React.useState<boolean>(false);
 
   const handlePrint = async () => {
     console.log("handlePrint");
@@ -18,13 +19,18 @@ export const App = () => {
     console.log(printerObj);
     console.log(image);
 
-    if (!image || !printer) return;
+    const path =
+      image?.path ||
+      "C:\\Users\\Luciel\\Documents\\fotos\\c208776c-6cd4-4ae4-98a3-b59bbbea9ce0.jpg";
+
+    if (!path || !printer) return;
 
     await window.electron.ipcRenderer.invoke("print-photo", {
-      photoPath: image.path,
+      photoPath: path,
       dimensions: dimension,
       resize,
       printer,
+      savePDF,
     });
   };
 
@@ -40,6 +46,10 @@ export const App = () => {
 
   const handleChangeResize = (e: React.ChangeEvent<HTMLInputElement>) => {
     setResize(e.target.value as "cover" | "contain");
+  };
+
+  const handleChangeSavePDF = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSavePDF(e.target.checked);
   };
 
   const handleChangePrinter = (value: string) => {
@@ -143,6 +153,18 @@ export const App = () => {
             <label htmlFor="cover">
               Manter proporção e cortar a imagem (sem margem) (Centímetros)
             </label>
+          </div>
+
+          <div className="flex gap-2 items-center mt-4">
+            <input
+              type="checkbox"
+              name="savePDF"
+              value="savePDF"
+              onChange={handleChangeSavePDF}
+              checked={savePDF}
+            />
+
+            <label htmlFor="cover">Salvar em PDF</label>
           </div>
         </div>
       </div>
