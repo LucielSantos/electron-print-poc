@@ -13,7 +13,7 @@ ipcMain.handle(
 
     try {
       await printPhoto(
-        { imgSrc: photoBase64, resize },
+        { imgSrc: photoBase64, imgPath: photoPath, resize },
         { dimensions, printer }
       );
 

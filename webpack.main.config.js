@@ -15,6 +15,12 @@ module.exports = {
   resolve: {
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.css', '.json'],
   },
+  externals:
+    process.env["NODE_ENV"] === "production"
+      ? {}
+      : {
+        sharp: "commonjs sharp",
+      },
   plugins: [
     new CopyWebpackPlugin({
       patterns: [
@@ -25,7 +31,4 @@ module.exports = {
       ]
     })
   ],
-  externals: {
-    ['@thiagoelg/node-printer']: 'commonjs @thiagoelg/node-printer'
-  }
 };
