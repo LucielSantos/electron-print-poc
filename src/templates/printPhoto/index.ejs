@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.tailwindcss.com"></script>
 
     <title>Photo to print</title>
   </head>
@@ -12,26 +11,38 @@
   <style>
     body {
       box-shadow: inset 0px 0px 0px 4px #000000;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: <%= img.widthIn %>in;
+      height: <%= img.heightIn %>in;
     }
 
     div {
       box-shadow: inset 0px 0px 0px 2px #f00;
+      margin: 0 !important;
+      padding: 0 !important;
+      width: <%= img.widthIn %>in;
+      height: <%= img.heightIn %>in;
+    }
+
+    img {
+      object-fit: contain;
+      margin: 0 !important;
+      width: <%= img.widthIn %>in !important;
+      height: <%= img.heightIn %>in !important;
     }
 
     @media print {
       @page {
-        size: <%= img.widthIn %>in <%= img.heightIn %>in landscape;
-        margin: 0;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: <%= img.widthIn %>in;
+        height: <%= img.heightIn %>in;
       }
     }
   </style>
 
   <body>
-    <div class="w-screen h-screen overflow-hidden">
-      <img
-        class="h-full w-full <%= resize === 'contain' ? 'object-contain' : 'object-cover' %> <%= img.rotate && 'rotate-90' %>"
-        src="<%= img.src %>"
-      />
-    </div>
+    <img src="<%= img.src %>" />
   </body>
 </html>

@@ -74,8 +74,8 @@ export const printPhoto = async (
           // height: dimension.height.px,
           // widthCm: dimension.width.cm,
           // heightCm: dimension.height.cm,
-          widthIn: dimension.height.in,
-          heightIn: dimension.width.in,
+          widthIn: dimension.width.in,
+          heightIn: dimension.height.in,
           src: img,
         },
       },
@@ -108,6 +108,10 @@ export const printPhoto = async (
                 //   width: cmToMicron(width) + 1,
                 //   height: cmToMicron(height) + 1,
                 // },
+                pageRanges: {
+                  from: 0,
+                  to: 0,
+                },
                 marginsType: 1,
                 pageSize: {
                   width: dimension.width.micron,
@@ -128,6 +132,12 @@ export const printPhoto = async (
               photoWindow.webContents.print({
                 silent: true,
                 deviceName: printer,
+                pageRanges: [
+                  {
+                    from: 0,
+                    to: 0,
+                  },
+                ],
                 margins: {
                   bottom: 0,
                   left: 0,

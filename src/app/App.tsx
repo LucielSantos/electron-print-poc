@@ -137,11 +137,11 @@ export const App = () => {
             />
 
             <label htmlFor="contain">
-              Manter proporção sem cortar a imagem (com margem) (Centímetros)
+              Manter proporção sem cortar a imagem (com margem)
             </label>
           </div>
 
-          <div className="flex gap-2 items-center">
+          {/* <div className="flex gap-2 items-center">
             <input
               type="checkbox"
               name="cover"
@@ -151,9 +151,9 @@ export const App = () => {
             />
 
             <label htmlFor="cover">
-              Manter proporção e cortar a imagem (sem margem) (Centímetros)
+              Manter proporção e cortar a imagem (sem margem)
             </label>
-          </div>
+          </div> */}
 
           <div className="flex gap-2 items-center mt-4">
             <input
