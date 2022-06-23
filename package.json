@@ -7,7 +7,7 @@
   "scripts": {
     "start": "electron-forge start",
     "package": "electron-forge package",
-    "make": "electron-forge make",
+    "make": "cross-env NODE_ENV=production electron-forge make",
     "publish": "electron-forge publish",
     "lint": "eslint --ext .ts,.tsx ."
   },
@@ -94,6 +94,7 @@
   },
   "dependencies": {
     "@types/ejs": "^3.1.1",
+    "cross-env": "^7.0.3",
     "ejs": "^3.1.8",
     "electron-squirrel-startup": "^1.0.0",
     "file-type": "^17.1.2",
