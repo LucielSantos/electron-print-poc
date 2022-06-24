@@ -5,20 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>Photo to print</title>
+    <title><%= title || 'Impressão de foto' %></title>
   </head>
 
   <style>
     body {
-      box-shadow: inset 0px 0px 0px 4px #000000;
-      margin: 0 !important;
-      padding: 0 !important;
-      width: <%= img.widthIn %>in;
-      height: <%= img.heightIn %>in;
-    }
-
-    div {
-      box-shadow: inset 0px 0px 0px 2px #f00;
       margin: 0 !important;
       padding: 0 !important;
       width: <%= img.widthIn %>in;

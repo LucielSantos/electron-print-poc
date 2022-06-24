@@ -23,6 +23,14 @@ export const App = () => {
       image?.path ||
       "C:\\Users\\Luciel\\Documents\\fotos\\c208776c-6cd4-4ae4-98a3-b59bbbea9ce0.jpg";
 
+    await window.electron.ipcRenderer.invoke("test", {
+      photoPath: path,
+      dimensions: dimension,
+      resize,
+      printer,
+      savePDF,
+    });
+    return;
     if (!path || !printer) return;
 
     await window.electron.ipcRenderer.invoke("print-photo", {

@@ -2,6 +2,7 @@ import { ipcMain, Notification } from "electron";
 import { mainWindow } from "../";
 import { PrintPhotoParams } from "../types/events";
 import { pathToBase64 } from "../utils/image";
+import { nativePrint } from "../utils/nativePrint";
 import { printPhoto } from "../utils/printPhoto";
 
 ipcMain.handle(
@@ -36,4 +37,12 @@ ipcMain.handle(
 
 ipcMain.handle("get-printers", async () => {
   return mainWindow.webContents.getPrintersAsync();
+});
+
+ipcMain.handle("test", async (_, { photoPath, printer }: PrintPhotoParams) => {
+  console.log("Success test");
+
+  nativePrint({ imgSrc: photoPath, printer });
+
+  return true;
 });

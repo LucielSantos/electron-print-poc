@@ -1,6 +1,7 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
+console.log(require.resolve('electron-edge-js'));
 
 module.exports = {
   /**
@@ -27,6 +28,14 @@ module.exports = {
         {
           from: path.resolve(__dirname, 'src', 'templates'),
           to: path.resolve(__dirname, '.webpack', 'main', 'templates')
+        },
+        {
+          from: path.resolve(__dirname, 'src', 'lib', 'dllWin'),
+          to: path.resolve(__dirname, '.webpack', 'main', 'dllWin')
+        },
+        {
+          from: path.join(path.dirname(require.resolve('electron-edge-js')), 'native'),
+          to: path.resolve(__dirname, '.webpack', 'main', 'native')
         },
       ]
     })

@@ -68,6 +68,7 @@ export const printPhoto = async (
       path.resolve(__dirname, "templates", "printPhoto", "index.ejs"),
       {
         resize: data.resize,
+        title: `Impressão - ${dimension.label}`,
         img: {
           // rotate,
           // width: dimension.width.px,
@@ -101,6 +102,17 @@ export const printPhoto = async (
 
           photoWindow.loadFile(htmlPath);
 
+          const resizedImg = await imageSharp
+            .resize(dimension.width.px, dimension.height.px)
+            .toBuffer();
+
+          // extPrinter.printDirect({
+          //   printer: printer,
+          //   data: resizedImg,
+          //   error: console.error,
+          //   success: console.log,
+          // });
+
           if (savePDF) {
             setTimeout(async () => {
               const pdfBuffer = await photoWindow.webContents.printToPDF({
@@ -127,33 +139,35 @@ export const printPhoto = async (
 
               // await print(pdfPath, { printer });
             }, 1000);
-          } else {
-            setTimeout(async () => {
-              photoWindow.webContents.print({
-                silent: true,
-                deviceName: printer,
-                pageRanges: [
-                  {
-                    from: 0,
-                    to: 0,
-                  },
-                ],
-                margins: {
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  top: 0,
-                  marginType: "none",
-                },
-                pageSize: {
-                  width: dimension.width.micron,
-                  height: dimension.height.micron,
-                },
-              });
-
-              console.log("Printed Photo");
-            }, 1000);
           }
+          // else {
+          //   setTimeout(async () => {
+          //     photoWindow.webContents.print({
+          //       silent: true,
+          //       deviceName: printer,
+          //       landscape: false,
+          //       pageRanges: [
+          //         {
+          //           from: 0,
+          //           to: 0,
+          //         },
+          //       ],
+          //       margins: {
+          //         bottom: 0,
+          //         left: 0,
+          //         right: 0,
+          //         top: 0,
+          //         marginType: "none",
+          //       },
+          //       pageSize: {
+          //         width: dimension.width.micron,
+          //         height: dimension.height.micron,
+          //       },
+          //     });
+
+          //     console.log("Printed Photo");
+          //   }, 1000);
+          // }
 
           setTimeout(() => {
             photoWindow.close();
