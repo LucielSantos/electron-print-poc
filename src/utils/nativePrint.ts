@@ -2,32 +2,51 @@ import { Notification } from "electron";
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";
+import {
+  dimensions,
+  rotateLandscape,
+  rotatePortrait,
+  sizesByValue,
+} from "../constants/dimensions";
 import { appPath, imgPath } from "../constants/paths";
 import NativePrinter from "../lib";
 import { calculateAspectRatio } from "./aspectRatio";
 // 6x4
-const width = 576;
-const height = 384;
+// const width = 576;
+// const height = 384;
 
 // 6x8
 // const width = 768;
 // const height = 576;
 
-const createResizeImg = async (imgSrc: string) => {
+const createResizeImg = async (imgSrc: string, dimensionValue: string) => {
   const img = sharp(imgSrc);
   const originalMetadata = await img.metadata();
+  const isLandscape = originalMetadata.width > originalMetadata.height;
+  let rotateAngle: number | undefined;
+  const width = sizesByValue[dimensionValue].width;
+  const height = sizesByValue[dimensionValue].height;
 
-  const ratio = calculateAspectRatio(
+  let ratio = calculateAspectRatio(
     width,
     height,
     originalMetadata.width,
     originalMetadata.height
   );
 
-  let rotateAngle: number | undefined;
+  if (rotateLandscape.includes(dimensionValue)) {
+    rotateAngle = isLandscape ? 90 : undefined;
 
-  if (originalMetadata.width < originalMetadata.height) {
-    rotateAngle = 90;
+    ratio = calculateAspectRatio(
+      width,
+      height,
+      originalMetadata.height,
+      originalMetadata.width
+    );
+  }
+
+  if (rotatePortrait.includes(dimensionValue)) {
+    rotateAngle = isLandscape ? undefined : 90;
   }
 
   const resizeImg = await img
@@ -54,16 +73,26 @@ const createResizeImg = async (imgSrc: string) => {
 interface Params {
   imgSrc: string;
   printer: string;
+  dimensions: string;
 }
 
-export const nativePrint = async ({ imgSrc, printer: printerName }: Params) => {
+export const nativePrint = async ({
+  imgSrc,
+  printer: printerName,
+  dimensions: dimensionsParam,
+}: Params) => {
   const printer = new NativePrinter();
+  const dimension = dimensions.find((value) => value.value === dimensionsParam);
 
   try {
-    const imgPath = await createResizeImg(imgSrc);
+    const imgPath = await createResizeImg(imgSrc, dimension.value);
 
     try {
-      await printer.print(imgPath, { paperSize: "(6x4)" }, printerName);
+      await printer.print(
+        imgPath,
+        { paperSize: dimension.paperSize },
+        printerName
+      );
 
       console.log("Success on Print");
     } catch (error) {

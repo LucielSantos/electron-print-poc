@@ -1,8 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-console.log(require.resolve('electron-edge-js'));
-
 module.exports = {
   /**
    * This is the main entry point for your application, it's the first file

@@ -39,10 +39,11 @@ ipcMain.handle("get-printers", async () => {
   return mainWindow.webContents.getPrintersAsync();
 });
 
-ipcMain.handle("test", async (_, { photoPath, printer }: PrintPhotoParams) => {
-  console.log("Success test");
+ipcMain.handle(
+  "test",
+  async (_, { photoPath, printer, dimensions }: PrintPhotoParams) => {
+    nativePrint({ imgSrc: photoPath, printer, dimensions });
 
-  nativePrint({ imgSrc: photoPath, printer });
-
-  return true;
-});
+    return true;
+  }
+);

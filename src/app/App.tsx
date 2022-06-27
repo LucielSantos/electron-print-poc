@@ -106,7 +106,7 @@ export const App = () => {
       </Select>
 
       <div className="flex gap-4">
-        {/* <Select
+        <Select
           name="dimension"
           label="Dimensão (centímetros)"
           value={dimension}
@@ -117,7 +117,7 @@ export const App = () => {
               {value.label}
             </option>
           ))}
-        </Select> */}
+        </Select>
 
         {/* <Input
           label="Altura"

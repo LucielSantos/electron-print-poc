@@ -182,11 +182,6 @@ export default class {
 
     return new Promise((resolve, reject) => {
       printFile(options, function (error, response) {
-        console.log("PRINT \n");
-        console.log(error);
-        console.log(response);
-        console.log("PRINT END \n");
-
         if (error) reject(error);
         else resolve(response);
       });
