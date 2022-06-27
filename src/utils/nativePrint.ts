@@ -2,7 +2,7 @@ import { Notification } from "electron";
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";
-import { imgPath } from "../constants/paths";
+import { appPath, imgPath } from "../constants/paths";
 import NativePrinter from "../lib";
 import { calculateAspectRatio } from "./aspectRatio";
 // 6x4
@@ -35,6 +35,10 @@ const createResizeImg = async (imgSrc: string) => {
     .resize(ratio.width, ratio.height, {
       fit: "cover",
     });
+
+  if (!fs.existsSync(appPath)) {
+    fs.mkdirSync(appPath);
+  }
 
   if (!fs.existsSync(imgPath)) {
     fs.mkdirSync(imgPath);
