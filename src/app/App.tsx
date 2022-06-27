@@ -19,27 +19,29 @@ export const App = () => {
     console.log(printerObj);
     console.log(image);
 
-    const path =
-      image?.path ||
-      "C:\\Users\\Luciel\\Documents\\fotos\\c208776c-6cd4-4ae4-98a3-b59bbbea9ce0.jpg";
+    // const path =
+    //   image?.path ||
+    //   "C:\\Users\\Luciel\\Documents\\fotos\\c208776c-6cd4-4ae4-98a3-b59bbbea9ce0.jpg";
+
+    if (!image?.path || !printer) return;
 
     await window.electron.ipcRenderer.invoke("test", {
-      photoPath: path,
+      photoPath: image?.path,
       dimensions: dimension,
       resize,
       printer,
       savePDF,
     });
     return;
-    if (!path || !printer) return;
+    // if (!path || !printer) return;
 
-    await window.electron.ipcRenderer.invoke("print-photo", {
-      photoPath: path,
-      dimensions: dimension,
-      resize,
-      printer,
-      savePDF,
-    });
+    // await window.electron.ipcRenderer.invoke("print-photo", {
+    //   photoPath: path,
+    //   dimensions: dimension,
+    //   resize,
+    //   printer,
+    //   savePDF,
+    // });
   };
 
   const handleChangeImage = (value: File | null) => setImage(value);
@@ -77,6 +79,7 @@ export const App = () => {
       console.log(printers);
 
       setPrinters(printers);
+      setPrinter(printers[0].name);
     })();
   }, []);
 
@@ -103,7 +106,7 @@ export const App = () => {
       </Select>
 
       <div className="flex gap-4">
-        <Select
+        {/* <Select
           name="dimension"
           label="Dimensão (centímetros)"
           value={dimension}
@@ -114,7 +117,7 @@ export const App = () => {
               {value.label}
             </option>
           ))}
-        </Select>
+        </Select> */}
 
         {/* <Input
           label="Altura"
@@ -132,10 +135,10 @@ export const App = () => {
       </div>
 
       <div className="flex flex-col gap-2">
-        <span>Redimensionamento</span>
+        {/* <span>Redimensionamento</span> */}
 
         <div className="flex flex-col gap-1">
-          <div className="flex gap-2 items-center">
+          {/* <div className="flex gap-2 items-center">
             <input
               type="checkbox"
               name="contain"
@@ -147,7 +150,7 @@ export const App = () => {
             <label htmlFor="contain">
               Manter proporção sem cortar a imagem (com margem)
             </label>
-          </div>
+          </div> */}
 
           {/* <div className="flex gap-2 items-center">
             <input
@@ -162,7 +165,7 @@ export const App = () => {
               Manter proporção e cortar a imagem (sem margem)
             </label>
           </div> */}
-
+          {/* 
           <div className="flex gap-2 items-center mt-4">
             <input
               type="checkbox"
@@ -173,7 +176,7 @@ export const App = () => {
             />
 
             <label htmlFor="cover">Salvar em PDF</label>
-          </div>
+          </div> */}
         </div>
       </div>
 
