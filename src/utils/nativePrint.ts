@@ -49,12 +49,6 @@ const createResizeImg = async (imgSrc: string, dimensionValue: string) => {
     rotateAngle = isLandscape ? undefined : 90;
   }
 
-  const resizeImg = await img
-    .rotate(rotateAngle)
-    .resize(ratio.width, ratio.height, {
-      fit: "cover",
-    });
-
   if (!fs.existsSync(appPath)) {
     fs.mkdirSync(appPath);
   }
@@ -65,7 +59,12 @@ const createResizeImg = async (imgSrc: string, dimensionValue: string) => {
 
   const imgPathSaved = path.join(imgPath, "resized-image.jpg");
 
-  await resizeImg.toFile(imgPathSaved);
+  await img
+    .rotate(rotateAngle)
+    .resize(ratio.width, ratio.height, {
+      fit: "cover",
+    })
+    .toFile(imgPathSaved);
 
   return imgPathSaved;
 };
@@ -96,9 +95,12 @@ export const nativePrint = async ({
 
       console.log("Success on Print");
     } catch (error) {
+      console.log(error);
       new Notification({ title: "Erro ao imprimir", body: error }).show();
     }
   } catch (error) {
+    console.log(error);
+
     new Notification({
       title: "Erro ao fazer redimensionamento",
       body: error.message,
