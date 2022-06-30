@@ -1,4 +1,4 @@
-const sizesValues = {
+export const sizesValues = {
   xs: "10x7",
   sm: "10x15",
   lg: "20x15",

@@ -7,6 +7,7 @@ import {
   rotateLandscape,
   rotatePortrait,
   sizesByValue,
+  sizesValues,
 } from "../constants/dimensions";
 import { appPath, imgPath } from "../constants/paths";
 import NativePrinter from "../lib";
@@ -26,6 +27,7 @@ const createResizeImg = async (imgSrc: string, dimensionValue: string) => {
   let rotateAngle: number | undefined;
   const width = sizesByValue[dimensionValue].width;
   const height = sizesByValue[dimensionValue].height;
+  const invertResize = dimensionValue === sizesValues.xs;
 
   let ratio = calculateAspectRatio(
     width,
@@ -59,12 +61,23 @@ const createResizeImg = async (imgSrc: string, dimensionValue: string) => {
 
   const imgPathSaved = path.join(imgPath, "resized-image.jpg");
 
-  await img
-    .rotate(rotateAngle)
-    .resize(ratio.width, ratio.height, {
-      fit: "cover",
-    })
-    .toFile(imgPathSaved);
+  if (invertResize) {
+    await img
+      .rotate(rotateAngle)
+      .resize(ratio.height, ratio.width, {
+        fit: "contain",
+        position: "right",
+        background: "white",
+      })
+      .toFile(imgPathSaved);
+  } else {
+    await img
+      .rotate(rotateAngle)
+      .resize(ratio.width, ratio.height, {
+        fit: "cover",
+      })
+      .toFile(imgPathSaved);
+  }
 
   return imgPathSaved;
 };
