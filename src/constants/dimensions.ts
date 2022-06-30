@@ -1,13 +1,18 @@
 const sizesValues = {
+  xs: "10x7",
   sm: "10x15",
   lg: "20x15",
 };
 
 export const rotatePortrait = [sizesValues.sm];
 
-export const rotateLandscape = [sizesValues.lg];
+export const rotateLandscape = [sizesValues.lg, sizesValues.xs];
 
 export const sizesByValue = {
+  [sizesValues.xs]: {
+    width: 264,
+    height: 384,
+  },
   [sizesValues.sm]: {
     width: 576,
     height: 384,
@@ -19,6 +24,23 @@ export const sizesByValue = {
 };
 
 export const dimensions = [
+  {
+    value: sizesValues.xs,
+    paperSize: "(6x4)",
+    label: "10 x 7",
+    width: {
+      px: 576,
+      cm: 15.24,
+      micron: 152400,
+      in: 6,
+    },
+    height: {
+      px: 384,
+      cm: 10.16,
+      micron: 101600,
+      in: 4,
+    },
+  },
   {
     value: sizesValues.sm,
     paperSize: "(6x4)",
